@@ -1,0 +1,17 @@
+﻿@using PhoneStore.Domain.Entities
+@model IEnumerable<Phone>
+
+@{
+    ViewBag.Title = "Товары";
+}
+
+@foreach (var p in @Model)
+{
+    <div>
+        <h3> @p.Name </h3>
+        <p> @p.Description </p>
+        <h4> @p.Price.ToString("# грн") </h4>
+    </div>
+}
+
+
