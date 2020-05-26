@@ -10,14 +10,18 @@ namespace PhoneStore.WebUI.Controllers
     public class PhoneController : Controller
     {
         private IPhoneRepository repository;
+        public int pageSize = 4;
         public PhoneController(IPhoneRepository repository)
         {
             this.repository = repository;
         }
-
-        public ViewResult List()
+        //TODO:Переделать
+        public ViewResult List(int page = 1)
         {
-            return View(repository.Phones);
+            return View(repository.Phones
+                .OrderBy(phone => phone.PhoneId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize));
         }
     }
 }
