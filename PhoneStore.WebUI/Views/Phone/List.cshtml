@@ -1,11 +1,12 @@
-﻿@using PhoneStore.Domain.Entities
-@model IEnumerable<Phone>
+﻿@using PhoneStore.WebUI.Models
+@using PhoneStore.WebUI.HtmlHelpers
+@model PhonesListViewModel
 
 @{
     ViewBag.Title = "Товары";
 }
 
-@foreach (var p in @Model)
+@foreach (var p in @Model.Phones)
 {
     <div>
         <h3> @p.Name </h3>
@@ -13,5 +14,9 @@
         <h4> @p.Price.ToString("# грн") </h4>
     </div>
 }
+
+<div>
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { page = x }))
+</div>
 
 

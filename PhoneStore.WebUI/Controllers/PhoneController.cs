@@ -1,4 +1,5 @@
 ﻿using PhoneStore.Domain.Abstract;
+using PhoneStore.WebUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,23 @@ namespace PhoneStore.WebUI.Controllers
         {
             this.repository = repository;
         }
-        //TODO:Переделать
+
         public ViewResult List(int page = 1)
         {
-            return View(repository.Phones
+            PhonesListViewModel model = new PhonesListViewModel
+            {
+                Phones = repository.Phones
                 .OrderBy(phone => phone.PhoneId)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize));
+                .Skip((page - 1)*pageSize)
+                .Take(pageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = pageSize,
+                    TotalItems = repository.Phones.Count()
+                }
+            };
+            return View(model);
         }
     }
 }
