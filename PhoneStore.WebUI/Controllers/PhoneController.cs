@@ -17,20 +17,24 @@ namespace PhoneStore.WebUI.Controllers
             this.repository = repository;
         }
 
-        public ViewResult List(int page = 1)
+        public ViewResult List(string category, int page = 1)
         {
             PhonesListViewModel model = new PhonesListViewModel
             {
                 Phones = repository.Phones
+                .Where(p => category == null || p.Category == category)
                 .OrderBy(phone => phone.PhoneId)
-                .Skip((page - 1)*pageSize)
+                .Skip((page - 1) * pageSize)
                 .Take(pageSize),
                 PagingInfo = new PagingInfo
                 {
                     CurrentPage = page,
                     ItemsPerPage = pageSize,
-                    TotalItems = repository.Phones.Count()
-                }
+                    TotalItems = category == null ? 
+                    repository.Phones.Count() :
+                    repository.Phones.Where(phone => phone.Category == category).Count()
+                },
+                CurrentCategory = category
             };
             return View(model);
         }

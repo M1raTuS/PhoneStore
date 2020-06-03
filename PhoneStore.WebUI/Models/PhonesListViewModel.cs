@@ -10,5 +10,6 @@ namespace PhoneStore.WebUI.Models
     {
         public IEnumerable<Phone> Phones { get; set; }
         public PagingInfo PagingInfo { get; set; }
+        public string CurrentCategory { get; set; }
     }
 }
