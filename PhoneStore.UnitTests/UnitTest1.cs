@@ -32,7 +32,7 @@ namespace PhoneStore.UnitTests
             controller.pageSize = 3;
 
             //Act
-            PhonesListViewModel result = (PhonesListViewModel)controller.List(null,2).Model;
+            PhonesListViewModel result = (PhonesListViewModel)controller.List(null, 2).Model;
 
             //Assert
             List<Phone> phones = result.Phones.ToList();
@@ -81,7 +81,7 @@ namespace PhoneStore.UnitTests
             controller.pageSize = 3;
 
             //Act
-            PhonesListViewModel result = (PhonesListViewModel)controller.List(null,2).Model;
+            PhonesListViewModel result = (PhonesListViewModel)controller.List(null, 2).Model;
 
             //Assert
             PagingInfo pageInfo = result.PagingInfo;
@@ -113,7 +113,7 @@ namespace PhoneStore.UnitTests
                 .Phones.ToList();
 
             //Assert
-            Assert.AreEqual(result.Count(),3);
+            Assert.AreEqual(result.Count(), 3);
             Assert.IsTrue(result[1].Name == "Phone2" && result[0].Category == "Cat1");
             Assert.IsTrue(result[2].Name == "Phone4" && result[1].Category == "Cat1");
         }
@@ -137,7 +137,7 @@ namespace PhoneStore.UnitTests
             List<string> results = ((IEnumerable<string>)target.Menu().Model).ToList();
 
             //Assert
-            Assert.AreEqual(results.Count(),4);
+            Assert.AreEqual(results.Count(), 4);
             Assert.AreEqual(results[0], "Apple");
             Assert.AreEqual(results[1], "Meizu");
             Assert.AreEqual(results[2], "Samsung");
@@ -165,32 +165,124 @@ namespace PhoneStore.UnitTests
         }
 
         [TestMethod]
-        public void Generate_Category_Specific_Game_Count()
+        public void Generate_Category_Specific_Phone_Count()
         {
-            /// Организация (arrange)
+            //Arrange
             Mock<IPhoneRepository> mock = new Mock<IPhoneRepository>();
             mock.Setup(m => m.Phones).Returns(new List<Phone>
-    {
-        new Phone { PhoneId = 1, Name = "Phone1", Category="Cat1"},
-        new Phone { PhoneId = 2, Name = "Phone2", Category="Cat2"},
-        new Phone { PhoneId = 3, Name = "Phone3", Category="Cat1"},
-        new Phone { PhoneId = 4, Name = "Phone4", Category="Cat2"},
-        new Phone { PhoneId = 5, Name = "Phone5", Category="Cat3"}
-    });
+            {
+            new Phone { PhoneId = 1, Name = "Phone1", Category="Cat1"},
+            new Phone { PhoneId = 2, Name = "Phone2", Category="Cat2"},
+            new Phone { PhoneId = 3, Name = "Phone3", Category="Cat1"},
+            new Phone { PhoneId = 4, Name = "Phone4", Category="Cat2"},
+            new Phone { PhoneId = 5, Name = "Phone5", Category="Cat3"}
+            });
             PhoneController controller = new PhoneController(mock.Object);
             controller.pageSize = 3;
 
-            // Действие - тестирование счетчиков товаров для различных категорий
+            //Act
             int res1 = ((PhonesListViewModel)controller.List("Cat1").Model).PagingInfo.TotalItems;
             int res2 = ((PhonesListViewModel)controller.List("Cat2").Model).PagingInfo.TotalItems;
             int res3 = ((PhonesListViewModel)controller.List("Cat3").Model).PagingInfo.TotalItems;
             int resAll = ((PhonesListViewModel)controller.List(null).Model).PagingInfo.TotalItems;
 
-            // Утверждение
+            //Assert
             Assert.AreEqual(res1, 2);
             Assert.AreEqual(res2, 2);
             Assert.AreEqual(res3, 1);
             Assert.AreEqual(resAll, 5);
+        }
+        [TestMethod]
+        public void Can_Add_New_Lines()
+        {
+            //Arrange
+            Phone phone1 = new Phone { PhoneId = 1, Name = "Phone1" };
+            Phone phone2 = new Phone { PhoneId = 2, Name = "Phone2" };
+            Cart cart = new Cart();
+
+            //Act
+            cart.AddItem(phone1, 1);
+            cart.AddItem(phone2, 1);
+            List<CartLine> results = cart.Lines.ToList();
+
+            //Assert
+            Assert.AreEqual(results.Count(), 2);
+            Assert.AreEqual(results[0].Phone, phone1);
+            Assert.AreEqual(results[1].Phone, phone2);
+        }
+        [TestMethod]
+        public void Can_Add_Quantity_For_Existing_Lines()
+        {
+            //Arrange
+            Phone phone1 = new Phone { PhoneId = 1, Name = "Phone1" };
+            Phone phone2 = new Phone { PhoneId = 2, Name = "Phone2" };
+            Cart cart = new Cart();
+
+            //Act
+            cart.AddItem(phone1, 1);
+            cart.AddItem(phone2, 1);
+            cart.AddItem(phone1, 5);
+            List<CartLine> results = cart.Lines.OrderBy(c => c.Phone.PhoneId).ToList();
+
+            //Assert
+            Assert.AreEqual(results.Count(), 2);
+            Assert.AreEqual(results[0].Quantity, 6);    // 6 экземпляров добавлено в корзину
+            Assert.AreEqual(results[1].Quantity, 1);
+        }
+        [TestMethod]
+        public void Can_Remove_Line()
+        {
+            //Arrange
+            Phone phone1 = new Phone { PhoneId = 1, Name = "Phone1" };
+            Phone phone2 = new Phone { PhoneId = 2, Name = "Phone2" };
+            Phone phone3 = new Phone { PhoneId = 3, Name = "Phone3" };
+            
+            Cart cart = new Cart();
+            cart.AddItem(phone1, 1);
+            cart.AddItem(phone2, 4);
+            cart.AddItem(phone3, 2);
+            cart.AddItem(phone2, 1);
+
+            //Act
+            cart.RemoveLine(phone2);
+
+            //Assert
+            Assert.AreEqual(cart.Lines.Where(c => c.Phone == phone2).Count(), 0);
+            Assert.AreEqual(cart.Lines.Count(), 2);
+        }
+        [TestMethod]
+        public void Calculate_Cart_Total()
+        {
+            //Arrange
+            Phone phone1 = new Phone { PhoneId = 1, Name = "Phone1", Price = 100 };
+            Phone phone2 = new Phone { PhoneId = 2, Name = "Phone2", Price = 55 };
+            Cart cart = new Cart();
+
+            //Act
+            cart.AddItem(phone1, 1);
+            cart.AddItem(phone2, 1);
+            cart.AddItem(phone1, 5);
+            decimal result = cart.ComputeTotalValue();
+
+            //Assert
+            Assert.AreEqual(result, 655);
+        }
+        [TestMethod]
+        public void Can_Clear_Contents()
+        {
+            //Arrange
+            Phone phone1 = new Phone { PhoneId = 1, Name = "Phone1", Price = 100 };
+            Phone phone2 = new Phone { PhoneId = 2, Name = "Phone2", Price = 55 };
+            Cart cart = new Cart();
+
+            //Act
+            cart.AddItem(phone1, 1);
+            cart.AddItem(phone2, 1);
+            cart.AddItem(phone1, 5);
+            cart.Clear();
+
+            //Assert
+            Assert.AreEqual(cart.Lines.Count(), 0);
         }
     }
 }
