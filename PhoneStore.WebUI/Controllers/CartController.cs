@@ -8,54 +8,47 @@ namespace PhoneStore.WebUI.Controllers
 {
     public class CartController : Controller
     {
-        public ViewResult Index(string returnUrl)
-        {
-            return View(new CartIndexViewModel
-            {
-                Cart = GetCart(),
-                ReturnUrl = returnUrl
-            });
-        }
-
         private IPhoneRepository repository;
         public CartController(IPhoneRepository repo)
         {
             repository = repo;
         }
-
-        public RedirectToRouteResult AddToCart(int phoneId, string returnUrl)
+        public ViewResult Index(Cart cart, string returnUrl)
+        {
+            return View(new CartIndexViewModel
+            {
+                Cart = cart,
+                ReturnUrl = returnUrl
+            });
+        }
+        public RedirectToRouteResult AddToCart(Cart cart, int phoneId, string returnUrl)
         {
             Phone phone = repository.Phones
                 .FirstOrDefault(g => g.PhoneId == phoneId);
 
             if (phone != null)
             {
-                GetCart().AddItem(phone, 1);
+                cart.AddItem(phone, 1);
             }
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        public RedirectToRouteResult RemoveFromCart(int phoneId, string returnUrl)
+        public RedirectToRouteResult RemoveFromCart(Cart cart, int phoneId, string returnUrl)
         {
             Phone phone = repository.Phones
                 .FirstOrDefault(g => g.PhoneId == phoneId);
 
             if (phone != null)
             {
-                GetCart().RemoveLine(phone);
+                cart.RemoveLine(phone);
             }
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        public Cart GetCart()
+        public PartialViewResult Summary(Cart cart)
         {
-            Cart cart = (Cart)Session["Cart"];
-            if (cart == null)
-            {
-                cart = new Cart();
-                Session["Cart"] = cart;
-            }
-            return cart;
+            return PartialView(cart);
         }
+     
     }
 }
