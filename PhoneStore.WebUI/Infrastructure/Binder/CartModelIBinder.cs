@@ -1,13 +1,9 @@
 ﻿using PhoneStore.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PhoneStore.WebUI.Infrastructure.Binder
 {
-    public class CartModelIBinder : IModelBinder 
+    public class CartModelIBinder : IModelBinder
     {
         private const string sessionKey = "Cart";
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)

@@ -1,9 +1,6 @@
 ﻿using PhoneStore.Domain.Abstract;
 using PhoneStore.WebUI.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PhoneStore.WebUI.Controllers
@@ -30,7 +27,7 @@ namespace PhoneStore.WebUI.Controllers
                 {
                     CurrentPage = page,
                     ItemsPerPage = pageSize,
-                    TotalItems = category == null ? 
+                    TotalItems = category == null ?
                     repository.Phones.Count() :
                     repository.Phones.Where(phone => phone.Category == category).Count()
                 },

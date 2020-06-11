@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace PhoneStore.WebUI
@@ -28,18 +24,18 @@ namespace PhoneStore.WebUI
                name: null,
                url: "Page{page}",
                defaults: new { controller = "Phone", action = "List", category = (string)null },
-               constraints: new {page = @"\d+" }
+               constraints: new { page = @"\d+" }
            );
 
             routes.MapRoute(null,
                 "{category}",
-                new {controller = "Phone", action = "List", page = 1 }
+                new { controller = "Phone", action = "List", page = 1 }
           );
 
             routes.MapRoute(null,
                  "{category}/Page{page}",
-                 new {controller = "Phone", action = "List"},
-                 new {page = @"\d+" }
+                 new { controller = "Phone", action = "List" },
+                 new { page = @"\d+" }
                  );
 
             routes.MapRoute(null, "{controller}/{action}");

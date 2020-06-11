@@ -1,10 +1,9 @@
-﻿using Moq;
-using Ninject;
+﻿using Ninject;
 using PhoneStore.Domain.Abstract;
 using PhoneStore.Domain.Concrete;
-using PhoneStore.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Web.Mvc;
 
 namespace PhoneStore.WebUI.Infrastructure
@@ -29,9 +28,19 @@ namespace PhoneStore.WebUI.Infrastructure
         {
             return kernel.GetAll(serviceType);
         }
+
         private void AddBindings()
         {
             kernel.Bind<IPhoneRepository>().To<EFPhoneRepository>();
+
+            EmailSettings emailSettings = new EmailSettings
+            {
+                WriteAsFile = bool.Parse(ConfigurationManager
+                .AppSettings["Email.WriteAsFile"] ?? "false")
+            };
+
+            kernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>()
+                .WithConstructorArgument("settings", emailSettings);
         }
     }
 }

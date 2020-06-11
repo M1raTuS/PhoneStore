@@ -53,6 +53,6 @@ namespace PhoneStore.WebUI.App_Start
         {
             System.Web.Mvc.DependencyResolver.SetResolver(new PhoneStore.WebUI.Infrastructure.NinjectDependencyResolver(kernel));
         }
-        
+
     }
 }

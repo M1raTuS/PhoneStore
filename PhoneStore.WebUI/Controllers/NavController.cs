@@ -1,8 +1,6 @@
 ﻿using PhoneStore.Domain.Abstract;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PhoneStore.WebUI.Controllers
@@ -15,7 +13,7 @@ namespace PhoneStore.WebUI.Controllers
             repository = repo;
         }
 
-       public PartialViewResult Menu(string category = null)
+        public PartialViewResult Menu(string category = null)
         {
             ViewBag.SelectedCategory = category;
 
@@ -25,6 +23,6 @@ namespace PhoneStore.WebUI.Controllers
                 .OrderBy(x => x);
             return PartialView(categories);
         }
-      
+
     }
 }
