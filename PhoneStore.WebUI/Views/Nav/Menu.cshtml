@@ -1,4 +1,4 @@
-﻿@model IEnumerable<string>
+﻿@*@model IEnumerable<string>
 
 @Html.ActionLink("Home", "List", "Phone", null,
     new { @class = "btn btn-block btn-default btn-lg" })
@@ -16,4 +16,4 @@
         @class = "btn btn-block btn-default btn-lg"
         + (link == ViewBag.SelectedCategory ? " btn-primary" : "")
     })
-}
+}*@

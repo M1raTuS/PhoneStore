@@ -21,7 +21,8 @@ namespace PhoneStore.WebUI.Controllers
                 .Select(phone => phone.Category)
                 .Distinct()
                 .OrderBy(x => x);
-            return PartialView(categories);
+
+            return PartialView("FlexMenu", categories);
         }
 
     }

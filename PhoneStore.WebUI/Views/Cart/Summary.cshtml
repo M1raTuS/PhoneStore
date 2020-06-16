@@ -1,25 +1,32 @@
 ﻿@model PhoneStore.Domain.Entities.Cart
 
-    <div class="navbar-right">
-        @Html.ActionLink("Заказать", "Index", "Cart",
-        new { returnUrl = Request.Url.PathAndQuery },
-        new { @class = "btn btn-default navbar-btn" })
-    </div>
+<div class="navbar-right hidden-xs">
+    @Html.ActionLink("Корзина", "Index", "Cart",
+    new { returnUrl = Request.Url.PathAndQuery },
+    new { @class = "btn btn-default navbar-btn" })
+</div>
 
-    <div class="navbar-text navbar-right">
-        <b>Ваша корзина</b>
-        @if (@Model.Lines.Sum(x => x.Quantity) == 1)
-        {
-            <a>@Model.Lines.Sum(x => x.Quantity) телефон</a>;
-        }
-        else if (@Model.Lines.Sum(x => x.Quantity) == 0 || @Model.Lines.Sum(x => x.Quantity) > 4)
-        {
-            <a>@Model.Lines.Sum(x => x.Quantity) телефонов</a>;
-        }
-        else 
-        {
+<div class="navbar-right visible-xs">
+    <a href=@Url.Action("Index", "Cart", new { returnUrl = Request.Url.PathAndQuery })
+       class="btn btn-default navbar-btn">
+        <span class="glyphicon glyphicon-shopping-cart"></span>
+    </a>
+</div>
+
+<div class="navbar-text navbar-right">
+    <b class="hidden-xs">Ваша корзина</b>
+    @if (@Model.Lines.Sum(x => x.Quantity) == 1)
+    {
+        <a>@Model.Lines.Sum(x => x.Quantity) телефон</a>;
+    }
+    else if (@Model.Lines.Sum(x => x.Quantity) == 0 || @Model.Lines.Sum(x => x.Quantity) > 4)
+    {
+        <a>@Model.Lines.Sum(x => x.Quantity) телефонов</a>;
+    }
+    else
+    {
         <a>@Model.Lines.Sum(x => x.Quantity) телефона</a>;
-        },
-        @Model.ComputeTotalValue().ToString("# грн")
-    </div>
+    },
+    @Model.ComputeTotalValue().ToString("# грн")
+</div>
 
