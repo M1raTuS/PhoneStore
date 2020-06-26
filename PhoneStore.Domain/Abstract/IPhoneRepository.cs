@@ -6,5 +6,6 @@ namespace PhoneStore.Domain.Abstract
     public interface IPhoneRepository
     {
         IEnumerable<Phone> Phones { get; }
+        void SavePhone(Phone phone);
     }
 }

@@ -12,5 +12,24 @@ namespace PhoneStore.Domain.Concrete
         {
             get { return context.Phones; }
         }
+        public void SavePhone(Phone phone)
+        {
+            if (phone.PhoneId == 0)
+            {
+                context.Phones.Add(phone);
+            }
+            else
+            {
+                Phone dbEntry = context.Phones.Find(phone.PhoneId);
+                if (dbEntry != null)
+                {
+                    dbEntry.Name = phone.Name;
+                    dbEntry.Description = phone.Description;
+                    dbEntry.Price = phone.Price;
+                    dbEntry.Category = phone.Category;
+                }
+            }
+            context.SaveChanges();
+        }
     }
 }
