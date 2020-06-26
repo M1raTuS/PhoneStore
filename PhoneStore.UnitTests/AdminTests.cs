@@ -117,5 +117,27 @@ namespace PhoneStore.UnitTests
             mock.Verify(m => m.SavePhone(It.IsAny<Phone>()), Times.Never());
             Assert.IsInstanceOfType(result, typeof(ViewResult));
         }
+        [TestMethod]
+        public void Can_Delete_Valid_Phones()
+        {
+            //Arrange
+            Phone phone = new Phone { PhoneId = 2, Name = "Phone2" };
+            Mock<IPhoneRepository> mock = new Mock<IPhoneRepository>();
+            mock.Setup(m => m.Phones).Returns(new List<Phone>
+            {
+                new Phone { PhoneId = 1, Name = "Phone1"},
+                new Phone { PhoneId = 2, Name = "Phone2"},
+                new Phone { PhoneId = 3, Name = "Phone3"},
+                new Phone { PhoneId = 4, Name = "Phone4"},
+                new Phone { PhoneId = 5, Name = "Phone5"}
+            });
+            AdminController controller = new AdminController(mock.Object);
+
+            //Act
+            controller.Delete(phone.PhoneId);
+
+            //Assert
+            mock.Verify(m => m.DeletePhone(phone.PhoneId));
+        }
     }
 }

@@ -37,5 +37,20 @@ namespace PhoneStore.WebUI.Controllers
                 return View(phone);
             }
         }
+        public ViewResult Create()
+        {
+            return View("Edit", new Phone());
+        }
+        [HttpPost]
+        public ActionResult Delete(int phoneId)
+        {
+            Phone deletedPhone = repository.DeletePhone(phoneId);
+            if (deletedPhone != null)
+            {
+                TempData["message"] = string.Format("Телефон \"{0}\" был удален",
+                    deletedPhone.Name);
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

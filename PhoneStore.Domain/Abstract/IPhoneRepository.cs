@@ -7,5 +7,6 @@ namespace PhoneStore.Domain.Abstract
     {
         IEnumerable<Phone> Phones { get; }
         void SavePhone(Phone phone);
+        Phone DeletePhone(int phoneId);
     }
 }

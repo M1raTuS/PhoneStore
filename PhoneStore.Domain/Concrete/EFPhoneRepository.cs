@@ -31,5 +31,15 @@ namespace PhoneStore.Domain.Concrete
             }
             context.SaveChanges();
         }
+        public Phone DeletePhone(int phoneId)
+        {
+            Phone dbEntry = context.Phones.Find(phoneId);
+            if (dbEntry != null)
+            {
+                context.Phones.Remove(dbEntry);
+                context.SaveChanges();
+            }
+            return dbEntry;
+        }
     }
 }
