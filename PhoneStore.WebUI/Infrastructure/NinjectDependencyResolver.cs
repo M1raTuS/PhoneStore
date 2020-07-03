@@ -1,6 +1,8 @@
 ﻿using Ninject;
 using PhoneStore.Domain.Abstract;
 using PhoneStore.Domain.Concrete;
+using PhoneStore.WebUI.Infrastructure.Abstract;
+using PhoneStore.WebUI.Infrastructure.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -41,6 +43,7 @@ namespace PhoneStore.WebUI.Infrastructure
 
             kernel.Bind<IOrderProcessor>().To<EmailOrderProcessor>()
                 .WithConstructorArgument("settings", emailSettings);
+            kernel.Bind<IAuthProvider>().To<FormAuthProvider>();
         }
     }
 }

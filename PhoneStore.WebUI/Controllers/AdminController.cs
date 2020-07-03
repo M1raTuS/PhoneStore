@@ -5,6 +5,7 @@ using System.Web.Mvc;
 
 namespace PhoneStore.WebUI.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         IPhoneRepository repository;
