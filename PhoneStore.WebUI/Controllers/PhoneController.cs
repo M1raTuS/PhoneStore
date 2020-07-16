@@ -1,4 +1,5 @@
 ﻿using PhoneStore.Domain.Abstract;
+using PhoneStore.Domain.Entities;
 using PhoneStore.WebUI.Models;
 using System.Linq;
 using System.Web.Mvc;
@@ -34,6 +35,19 @@ namespace PhoneStore.WebUI.Controllers
                 CurrentCategory = category
             };
             return View(model);
+        }
+        public FileContentResult GetImage(int phoneId)
+        {
+            Phone phone = repository.Phones
+                .FirstOrDefault(p => p.PhoneId == phoneId);
+            if (phone != null)
+            {
+                return File(phone.ImageData, phone.ImageMimeType);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

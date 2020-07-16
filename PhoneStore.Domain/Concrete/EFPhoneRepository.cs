@@ -27,6 +27,8 @@ namespace PhoneStore.Domain.Concrete
                     dbEntry.Description = phone.Description;
                     dbEntry.Price = phone.Price;
                     dbEntry.Category = phone.Category;
+                    dbEntry.ImageData = phone.ImageData;
+                    dbEntry.ImageMimeType = phone.ImageMimeType;
                 }
             }
             context.SaveChanges();

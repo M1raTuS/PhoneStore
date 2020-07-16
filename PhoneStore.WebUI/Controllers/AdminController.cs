@@ -1,6 +1,7 @@
 ﻿using PhoneStore.Domain.Abstract;
 using PhoneStore.Domain.Entities;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace PhoneStore.WebUI.Controllers
@@ -25,10 +26,16 @@ namespace PhoneStore.WebUI.Controllers
             return View(phone);
         }
         [HttpPost]
-        public ActionResult Edit(Phone phone)
+        public ActionResult Edit(Phone phone, HttpPostedFileBase image = null)
         {
             if (ModelState.IsValid)
             {
+                if (image != null)
+                {
+                    phone.ImageMimeType = image.ContentType;
+                    phone.ImageData = new byte[image.ContentLength];
+                    image.InputStream.Read(phone.ImageData, 0, image.ContentLength);
+                }
                 repository.SavePhone(phone);
                 TempData["message"] = string.Format("Изменения в телефоне \"{0}\" были сохранены", phone.Name);
                 return RedirectToAction("Index");
